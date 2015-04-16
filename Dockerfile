@@ -8,7 +8,8 @@ ADD ./project/src/fk-server /go/src/pippo/fk-server
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
-WORKDIR /go/src/pippo
+WORKDIR /go/src/pippo/fk-server
+RUN ls -la
 RUN go get .
 RUN go install pippo/fk-server
 
