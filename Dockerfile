@@ -8,6 +8,7 @@ ADD ./project/src/fk-server /go/src/github.com/fk-server
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
+RUN go get
 RUN go install github.com/fk-server
 
 # Run the outyet command by default when the container starts.
