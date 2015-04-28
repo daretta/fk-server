@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-require 'Slim/Slim.php';
+require 'Slim/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();$app->contentType("application/json");
