@@ -3,23 +3,24 @@ include 'db.php';
 require 'Slim/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
-$app = new \Slim\Slim();$app->contentType("application/json");
+$app = new \Slim\Slim();
 
-$app->get('/feedbacks','getFeedbacks');
-$app->get('/feedbacks/:feedback_id','getFeedback');
-$app->post('/feedbacks', 'insertFeedback');
-$app->delete('/feedbacks/:feedback_id','deleteFeedback');
+$app->get('/feedbacks','setResponseHeader','getFeedbacks');
+$app->get('/feedbacks/:feedback_id','setResponseHeader','getFeedback');
+$app->post('/feedbacks','setResponseHeader','insertFeedback');
+$app->delete('/feedbacks/:feedback_id','setResponseHeader','deleteFeedback');
 
-$app->get('/forms','getForms');
-$app->get('/forms/:form_id','getForm');
-$app->post('/forms', 'insertForm');
-$app->delete('/forms/:form_id','deleteForm');
+$app->get('/forms','setResponseHeader','getForms');
+$app->get('/forms/:form_id','setResponseHeader','getForm');
+$app->post('/forms','setResponseHeader','insertForm');
+$app->delete('/forms/:form_id','setResponseHeader','deleteForm');
 
 $app->run();
 
 // FEEDBACK
 // GET http://APISERVER/api/feedbacks
 function getFeedbacks() {
+	$app = \Slim\Slim::getInstance();
 	$feedbacks = array('feedbacks' => array());
 	$sql = "	SELECT		*
 				FROM		feedback
@@ -33,10 +34,10 @@ function getFeedbacks() {
 		foreach ($feedbacks['feedbacks'] as $key => $feedback) {
 			$feedbacks['feedbacks'][$key]->data = json_decode($feedback->data);
 		}
-		echo json_encode($feedbacks);
+		$app->response->setBody(json_encode($feedbacks));
 	} catch(PDOException $e) {
 	    //error_log($e->getMessage(), 3, '/var/tmp/php.log');
-		echo json_encode(array('error' => array('text' => $e->getMessage())));
+		$app->response->setBody(json_encode(array('error' => array('text' => $e->getMessage()))));
 	}
 }
 // GET http://APISERVER/api/feedbacks/:feedback_id
@@ -118,11 +119,7 @@ function getForms() {
 		foreach ($forms['forms'] as $key => $form) {
 			$forms['forms'][$key]->data = json_decode($form->data);
 		}
-/*$response = $app->response();
-$response['Content-Type'] = 'application/json';
-$response['X-Powered-By'] = 'Potato Energy';
-$response->status(200);
-$response->body(json_encode($forms));*/
+
 		echo json_encode($forms);
 	} catch(PDOException $e) {
 	    //error_log($e->getMessage(), 3, '/var/tmp/php.log');
@@ -241,4 +238,9 @@ function deleteForm($formId) {
 	} catch(PDOException $e) {
 		echo json_encode(array('error' => array('text' => $e->getMessage())));
 	}
+}
+
+function setResponseHeader() {
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
 }
