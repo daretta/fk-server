@@ -1,9 +1,17 @@
 <?php
+// CORS
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS");
+
 include 'db.php';
 require 'Slim/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();
+
+/*$app->map('/:x+', function($x) {
+    http_response_code(200);
+})->via('OPTIONS');*/
 
 $app->get('/feedbacks','setResponseHeader','getFeedbacks');
 $app->get('/feedbacks/:feedback_id','setResponseHeader','getFeedback');
@@ -14,6 +22,7 @@ $app->get('/forms','setResponseHeader','getForms');
 $app->get('/forms/:form_id','setResponseHeader','getForm');
 $app->post('/forms','setResponseHeader','insertForm');
 $app->delete('/forms/:form_id','setResponseHeader','deleteForm');
+
 
 $app->run();
 
