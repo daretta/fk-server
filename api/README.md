@@ -69,6 +69,8 @@ _BODY_:
                     "href":"%s" // URL that represents the last resources page
                 }
         }
+    "totalPages": "%i",
+    "currentPage": "%i"
 }
 ```
 ___
