@@ -79,29 +79,22 @@ function getFeedbacks() {
 				'href' => $baseUrl ,
 			),
 		);
-		if($page > 1) {
-			$feedbacks['_links']['self']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $page;
-			if($page > 2) {
-				if($page > $pages) {
-					$feedbacks['_links']['prev']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $pages;
-				}
-				else {
-					$feedbacks['_links']['prev']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . ($page - 1);
-				}
-				$feedbacks['_links']['first']['href'] = $baseUrl;
-			}
-			else {
-				$feedbacks['_links']['prev']['href'] = $baseUrl;
-			}
-		}
+		$feedbacks['_links']['self']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $page;
+		$next_page = $pages;
+		$first_page = 1;
+		$prev_page = $first_page;
 		if($page < $pages) {
-			$feedbacks['_links']['next']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . ($page + 1);
-			if($page <= ($pages - 2 )) {
-				$feedbacks['_links']['last']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $pages;
-			}
+			$next_page = $page + 1;
 		}
+		if($page > 1) {
+			$prev_page = $page-1;
+		}
+		$feedbacks['_links']['next']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $next_page;
+		$feedbacks['_links']['last']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $pages;
+		$feedbacks['_links']['prev']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $prev_page;
+		$feedbacks['_links']['first']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $first_page;
 		$feedbacks['totalPages'] = $pages;
-		$feedbacks['currentPage'] = $page;
+		$feedbacks['currentPage'] = (int)$page;
 		$db = null;
 		$app->response->setBody(json_encode($feedbacks));
 	} catch(PDOException $e) {
