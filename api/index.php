@@ -6,7 +6,7 @@ if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
 	header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
 }
 
-include 'db.php';
+include 'config/config.php';
 require 'Slim/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
@@ -100,6 +100,8 @@ function getFeedbacks() {
 				$feedbacks['_links']['last']['href'] = $baseUrl . (empty($queryString)? '?':'&') .'page=' . $pages;
 			}
 		}
+		$feedbacks['totalPages'] = $pages;
+		$feedbacks['currentPage'] = $page;
 		$db = null;
 		$app->response->setBody(json_encode($feedbacks));
 	} catch(PDOException $e) {
